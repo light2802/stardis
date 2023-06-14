@@ -72,7 +72,7 @@ jobs:
           
       - name: Generate Graphs and HTML
         if: github.event_name != 'pull_request'
-        run: asv publish
+        run: asv publish 
       
       # - name: Push results to results repository
       #   if: github.event_name != 'pull_request'
