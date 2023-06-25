@@ -10,7 +10,7 @@ from astropy import units as u, constants as const
 from stardis.opacities.broadening import calculate_broadening
 from stardis.opacities.voigt import voigt_profile
 from stardis.opacities.util import sigma_file, map_items_to_indices, get_number_density
-
+from stardis.bechmarks.base import dump_args
 
 VACUUM_ELECTRIC_PERMITTIVITY = 1 / (4 * np.pi)
 BF_CONSTANT = (
@@ -58,7 +58,6 @@ def calc_alpha_file(stellar_plasma, stellar_model, tracing_nus, species):
     alpha_file = np.zeros((len(temperatures), len(tracing_lambdas)))
 
     for spec, fpath in species.items():
-
         sigmas = sigma_file(tracing_lambdas, temperatures, fpath)
 
         number_density, atomic_number, ion_number = get_number_density(
@@ -209,7 +208,6 @@ def calc_alpha_bf(stellar_plasma, stellar_model, tracing_nus, species):
     alpha_bf = np.zeros((len(fv_geometry), len(tracing_nus)))
 
     for spec, dct in species.items():
-
         # just for reading atomic number and ion number
         ion_number_density, atomic_number, ion_number = get_number_density(
             stellar_plasma, spec + "_bf"
@@ -308,7 +306,6 @@ def calc_alpha_ff(stellar_plasma, stellar_model, tracing_nus, species):
     alpha_ff = np.zeros([len(fv_geometry), len(tracing_nus)])
 
     for spec, dct in species.items():
-
         alpha_spec = np.zeros([len(fv_geometry), len(tracing_nus)])
 
         number_density, atomic_number, ion_number = get_number_density(
@@ -449,12 +446,10 @@ def calc_alpha_line_at_nu(
     alpha_line_at_nu = np.zeros((no_shells, len(tracing_nus)))
 
     for i in range(len(tracing_nus)):
-
         nu = tracing_nus[i].value
         delta_nus = nu - line_nus
 
         for j in range(no_shells):
-
             gammas_in_shell = gammas[:, j]
             doppler_widths_in_shell = doppler_widths[:, j]
             alphas_in_shell = alphas_array[:, j]
@@ -517,7 +512,6 @@ def calc_alan_entries(
     phis = np.zeros(len(delta_nus))
 
     for k in range(len(delta_nus)):
-
         delta_nu = np.abs(delta_nus[k])
         doppler_width = doppler_widths_in_shell[k]
         gamma = gammas_in_shell[k]
@@ -528,10 +522,7 @@ def calc_alan_entries(
 
 
 def calc_alphas(
-    stellar_plasma,
-    stellar_model,
-    tracing_nus,
-    opacity_config,
+    stellar_plasma, stellar_model, tracing_nus, opacity_config, args_dict=None
 ):
     """
     Calculates total opacity.
@@ -558,6 +549,7 @@ def calc_alphas(
         line in each shell.
     """
 
+    dump_args(args_dict)
     alpha_file = calc_alpha_file(
         stellar_plasma,
         stellar_model,

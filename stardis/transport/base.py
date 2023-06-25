@@ -1,6 +1,7 @@
 import numba
 import numpy as np
 from astropy import units as u, constants as const
+from stardis.bechmarks.base import dump_args
 
 
 def bb_nu(tracing_nus, boundary_temps):
@@ -95,9 +96,7 @@ def single_theta_trace(stellar_model, alphas, tracing_nus, theta):
     I_nu_theta[0] = bb[0]  # the innermost boundary is photosphere
 
     for i in range(len(tracing_nus)):  # iterating over nus (columns)
-
         for j in range(no_of_shells):  # iterating over cells/shells (rows)
-
             curr_tau = taus[i, j]
 
             w0, w1 = calc_weights(curr_tau)
@@ -114,7 +113,7 @@ def single_theta_trace(stellar_model, alphas, tracing_nus, theta):
     return I_nu_theta
 
 
-def raytrace(stellar_model, alphas, tracing_nus, no_of_thetas=20):
+def raytrace(stellar_model, alphas, tracing_nus, no_of_thetas=20, args_dict=None):
     """
     Raytraces over many angles and integrates to get flux using the midpoint
     rule.
@@ -137,6 +136,7 @@ def raytrace(stellar_model, alphas, tracing_nus, no_of_thetas=20):
         each shell boundary for each frequency in tracing_nus.
     """
 
+    dump_args(args_dict)
     dtheta = (np.pi / 2) / no_of_thetas
     start_theta = dtheta / 2
     end_theta = (np.pi / 2) - (dtheta / 2)

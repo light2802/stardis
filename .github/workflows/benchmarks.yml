@@ -6,7 +6,7 @@ env:
 on:
   push:
     branches:
-      - main
+      - "*"
   pull_request:
     branches:
       - "*"
@@ -75,7 +75,7 @@ jobs:
       - name: Run benchmarks for last 5 commits if not PR
         if: github.event_name != 'pull_request'
         run: |
-          git log -n 5 --pretty=format:"%H" >> tag_commits.txt
+          git log -n 1 --pretty=format:"%H" >> tag_commits.txt
           asv run -v HASHFILE:tag_commits.txt | tee asv-output.log  
           if grep -q failed asv-output.log; then 
             echo "Some benchmarks have failed!"
@@ -97,7 +97,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.BOT_TOKEN }}
         with:
           source-directory: ".asv/html"
-          destination-github-username: "tardis-sn"
+          destination-github-username: "light2802"
           destination-repository-name: "stardis-benchmarks"
           user.email: tardis.sn.bot@gmail.com
           target-branch: main
@@ -110,7 +110,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.BOT_TOKEN }}
         with:
           source-directory: ".asv/results"
-          destination-github-username: "tardis-sn"
+          destination-github-username: "light2802"
           destination-repository-name: "stardis-benchmarks"
           user.email: tardis.sn.bot@gmail.com
           target-branch: main

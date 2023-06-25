@@ -18,7 +18,7 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 schema = os.path.join(base_dir, "config_schema.yml")
 
 
-def run_stardis(config_fname, tracing_lambdas_or_nus):
+def run_stardis(config_fname, tracing_lambdas_or_nus, args_dict=None):
     """
     Runs a STARDIS simulation.
 
@@ -57,10 +57,11 @@ def run_stardis(config_fname, tracing_lambdas_or_nus):
         stellar_model=stellar_model,
         tracing_nus=tracing_nus,
         opacity_config=config.opacity,
+        args_dict=args_dict,
     )
 
     F_nu = raytrace(
-        stellar_model, alphas, tracing_nus, no_of_thetas=config.no_of_thetas
+        stellar_model, alphas, tracing_nus, no_of_thetas=config.no_of_thetas, args_dict=args_dict
     )
 
     return STARDISOutput(
@@ -116,7 +117,6 @@ class STARDISOutput:
     def __init__(
         self, stellar_plasma, stellar_model, alphas, gammas, doppler_widths, F_nu, nus
     ):
-
         self.stellar_plasma = stellar_plasma
         self.stellar_model = stellar_model
         self.alphas = alphas
